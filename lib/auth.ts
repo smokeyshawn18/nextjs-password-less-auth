@@ -6,7 +6,7 @@ import { emailOTP } from "better-auth/plugins";
 
 import { Resend } from "resend";
 import VerifyEmail from "@/components/auth/verification-email";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "../app/generated/prisma/client";
 
 const resend = new Resend(process.env.RESEND_API_KEY!);
 
