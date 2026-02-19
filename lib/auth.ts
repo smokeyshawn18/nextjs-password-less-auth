@@ -1,15 +1,12 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 // If your Prisma file is located elsewhere, you can change the path
-import { PrismaClient } from "@/app/generated/prisma/client";
 
 import { emailOTP } from "better-auth/plugins";
 
-
 import { Resend } from "resend";
 import VerifyEmail from "@/components/auth/verification-email";
-
-
+import { PrismaClient } from "@prisma/client";
 
 const resend = new Resend(process.env.RESEND_API_KEY!);
 
@@ -57,6 +54,5 @@ export const auth = betterAuth({
       allowedAttempts: 5,
       expiresIn: 600,
     }),
-  
   ],
 });
