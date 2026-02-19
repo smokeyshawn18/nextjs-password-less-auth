@@ -63,7 +63,7 @@ export function OTPForm({ email, onSuccess, onError, ...props }: OTPFormProps) {
             onSuccess?.();
             router.push("/dashboard");
           },
-        }
+        },
       );
     } catch (error) {
       toast.error("An unexpected error occurred.");

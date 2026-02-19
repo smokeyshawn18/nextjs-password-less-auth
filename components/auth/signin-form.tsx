@@ -44,7 +44,7 @@ export function SignInForm({
     setPendingOAuthProvider(true);
     try {
       await authClient.signIn.social({ provider, callbackURL: "/dashboard" });
-    } catch (error) {
+    } catch {
       toast.error("Social sign-in failed.");
     }
     setPendingOAuthProvider(false);
@@ -61,9 +61,9 @@ export function SignInForm({
             setShowOtpForm(true);
             toast.success("Verification email sent.");
           },
-        }
+        },
       );
-    } catch (error) {
+    } catch {
       toast.error("Unexpected error sending verification email.");
     }
     setPendingOtpEmail(false);
