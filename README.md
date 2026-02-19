@@ -1,229 +1,122 @@
 # 🔐 Next.js Passwordless Authentication System
 
-A production-ready passwordless authentication system.
+A **production-ready passwordless authentication system** built with Next.js.
 
-Users authenticate using a 6-digit One-Time Password (OTP) sent to their email.  
-If verified within 10 minutes, they are redirected to the dashboard.
-
----
-
-# Features of this auth system
-
-- Passwordless login (Email + OTP)
-- 6-digit OTP generation
-- 10-minute OTP expiration
-- Secure session handling
-- Prisma ORM with Neon DB
-- Email delivery using Resend
-- OAuth ready (Google & GitHub optional)
-- Production-ready architecture
+Users authenticate using a **6-digit One-Time Password (OTP)** sent to their email. If verified within **10 minutes**, they are redirected to the dashboard.
 
 ---
 
-# 🏗 Tech Stack
+## ✨ Features
 
-- Framework: Next.js (App Router)
-- Language: TypeScript
-- Authentication: BetterAuth
-- Database: Neon PostgreSQL
-- ORM: Prisma
-- Email Service: Resend
+- ✅ Passwordless login (Email + OTP)
+- ✅ 6-digit OTP generation
+- ✅ 10-minute OTP expiration
+- ✅ Secure session handling
+- ✅ Prisma ORM with Neon DB
+- ✅ Email delivery using Resend
+- ✅ OAuth ready (Google & GitHub optional)
+- ✅ Production-ready architecture
 
-```
+---
 
-### 3. Set Up Environment Variables
-Create a `.env` file in the project root and add the required environment variables:
-```
+## 🛠 Tech Stack
 
-# Environment variables declared in this file are NOT automatically loaded by Prisma.
+| Category      | Technology           |
+| ------------- | -------------------- |
+| **Framework** | Next.js (App Router) |
+| **Language**  | TypeScript           |
+| **Auth**      | BetterAuth           |
+| **Database**  | Neon PostgreSQL      |
+| **ORM**       | Prisma               |
+| **Email**     | Resend               |
 
-# Please add `import "dotenv/config";` to your `prisma.config.ts` file, or use the Prisma CLI with Bun
+---
 
-# to load environment variables from .env files: https://pris.ly/prisma-config-env-vars.
+## 🚀 Quick Start
 
-# Prisma supports the native connection string format for PostgreSQL, MySQL, SQLite, SQL Server, MongoDB and CockroachDB.
+### 1. Clone & Install
 
-# See the documentation for all the connection string options: https://pris.ly/d/connection-strings
+```bash
+git clone <your-repo-url>
+cd nextjs-passwordless-auth
+npm install
+# or yarn install, pnpm install, bun install
 
-# Database connection URL
 
+# Create .env in root
+
+# Database
 DATABASE_URL=""
 
-# Better Auth Configuration
-
+# Better Auth
 BETTER_AUTH_SECRET=""
-BETTER_AUTH_URL="http://localhost:3000" # Base URL of your app
+BETTER_AUTH_URL="http://localhost:3000"
 
-# OAuth Credentials if you wanna use
-
+# OAuth (Optional)
 GOOGLE_CLIENT_ID=""
 GOOGLE_CLIENT_SECRET=""
-
 GITHUB_CLIENT_ID=""
 GITHUB_CLIENT_SECRET=""
 
-# Resend API Key
-
+# Email
 RESEND_API_KEY=""
-
 ```
 
-### 4. Prisma Setup
-Generate the Prisma client and run migrations:
-```
+3. Prisma Setup
 
+bash
 npx prisma generate
 npx prisma migrate dev --name init
 
-````
+⚙️ Algorithm: Passwordless OTP Login
 
-### 5. Run the Development Server
-Run the development server:
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-````
+    User submits email
 
-# System Flowchart
+    Check if email exists
 
-+------------------+
-| User Enters |
-| Email |
-+--------+---------+
-|
-v
-+------------------+
-| Generate 6-digit |
-| OTP |
-+--------+---------+
-|
-v
-+------------------+
-| Store OTP with |
-| 10 min Expiry |
-+--------+---------+
-|
-v
-+------------------+
-| Send OTP via |
-| Resend Email |
-+--------+---------+
-|
-v
-+------------------+
-| User Enters OTP |
-+--------+---------+
-|
-v
-+----------------------+
-| Validate OTP & Time |
-+--------+-------------+
-|
-+-----+------+
-| |
-v v
-Valid Invalid
-| |
-v v
-Create Show Error
-Session
-|
-v
-Redirect to Dashboard
+    Generate random 6-digit OTP
 
-# System Data Flow Diagram
+    Set expiration: current time + 10 minutes
 
-Level - 0
+    Store OTP & expiration in database
+
+    Send OTP via Resend email
+
+    User submits OTP
+
+    Retrieve stored OTP from database
+
+    IF (entered OTP == stored OTP) AND (current time < expiration)
+
+        ✅ Create user session
+
+        ✅ Redirect to dashboard
+
+        ❌ ELSE show error
+
+    End
+
+| Feature        | Implementation           |
+| -------------- | ------------------------ |
+| OTP Expiration | 10 minutes               |
+| Single-use OTP | Recommended              |
+| Sessions       | Secure HTTP-only cookies |
+| Validation     | Server-side only         |
+| No Passwords   | Passwordless design      |
+| Secrets        | Environment variables    |
+
+# Data Flow Diagram (Level 0)
 
 User
-|
-v
-Authentication System
-|
-v
-Database (Neon PostgreSQL)
-|
-v
-Email Service (Resend)
+↓
+[Authentication System]
+↓
+[Database: Neon PostgreSQL]
+↓
+[Email Service: Resend]
 
-```
+# Data Flow Diagram (Level 1)
 
-Level - 1
-
-User --> [Sign In Page] --> [OTP Generator]
-                                  |
-                                  v
-                           [Database: Store OTP]
-                                  |
-                                  v
-                           [Email Service]
-                                  |
-                                  v
-User <-- Enter OTP <-- [OTP Verification]
-                                  |
-                                  v
-                           [Session Manager]
-                                  |
-                                  v
-                             Dashboard
-
-
-```
-
-# Algorithm: Passwordless OTP Login
-
-Step 1: User submits email
-Step 2: Check if email exists
-Step 3: Generate random 6-digit OTP
-Step 4: Set expiration time = current time + 10 minutes
-Step 5: Store OTP and expiration in database
-Step 6: Send OTP to user email
-Step 7: User submits OTP
-Step 8: Retrieve stored OTP from database
-Step 9: IF
-  (entered OTP == stored OTP)
-  AND (current time < expiration time)
-  THEN
-   Create user session
-   Redirect to dashboard
-  ELSE
-   Show error message
-Step 10: End
-
-```
-
-# Security Considerations
-
-OTP expires in 10 minutes
-
-OTP single-use recommended
-
-Secure HTTP-only cookies
-
-Server-side validation
-
-No password stored
-
-Secret keys stored in environment variables
-
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Development Environment
-
-Tools and technologies used in the development of the project:
-
-- Microsoft Visual Studio Code
-```
+User → [Sign In Page] → [OTP Generator] → [Database: Store OTP] → [Email Service]
+↑ ↓
+[Enter OTP] ← [OTP Verification] ← [Session Manager] → [Dashboard]
