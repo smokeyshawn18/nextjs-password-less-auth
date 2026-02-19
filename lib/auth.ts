@@ -32,7 +32,7 @@ export const auth = betterAuth({
       storeOTP: "encrypted",
       overrideDefaultEmailVerification: true,
       disableSignUp: false,
-      async sendVerificationOTP({ email, otp, type }) {
+      async sendVerificationOTP({ email, otp }) {
         try {
           await resend.emails.send({
             from: "onboarding@resend.dev",
